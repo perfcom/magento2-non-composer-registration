@@ -1,0 +1,25 @@
+{
+  "name": "perfcom/magento2-non-composer-registration",
+  "description": "This module replaces the NonComposerComponentRegistration file during composer operations.",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "type": "composer-plugin",
+  "authors": [
+    {
+      "name": "Louis de Looze",
+      "email": "louis@perfcom.dev"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "composer-plugin-api": "^1.0||^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Perfcom\\NonComposerRegistration\\": "src/"
+    }
+  },
+  "extra": {
+    "class": "Perfcom\\NonComposerRegistration\\ComposerPlugin"
+  }
+}
