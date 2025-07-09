@@ -101,18 +101,26 @@ final class ComposerPlugin implements PluginInterface, EventSubscriberInterface
 
         $registrationFiles = $this->excludeDisabled($basePath, $registrationFiles);
 
+        $registrationFiles = $this->makeRelative($basePath, $registrationFiles);
+
+
         $registrationFilesString = var_export($registrationFiles, true);
-        $phpCode = <<<PHP
+        $header = <<<PHP
 <?php
+declare(strict_types=1);
 
 \$registrationFiles = $registrationFilesString;
 
-foreach (\$registrationFiles as \$registrationFile) {
-    require_once \$registrationFile;
+PHP;
+        $body = <<<'PHP'
+
+foreach ($registrationFiles as $registrationFile) {
+    require_once __DIR__ . '/../../' . $registrationFile;
 }
+
 PHP;
 
-        file_put_contents($filePath, $phpCode);
+        file_put_contents($filePath, $header . $body);
 
     }
 
@@ -139,5 +147,13 @@ PHP;
 
         }
         return $finalRegistrationFiles;
+    }
+
+    private function makeRelative(string $basePath, array $registrationFiles): array
+    {
+        foreach ($registrationFiles as $key => $registrationFile ) {
+            $registrationFiles[$key] = str_replace($basePath . DIRECTORY_SEPARATOR, '', $registrationFile);
+        }
+        return $registrationFiles;
     }
 }
