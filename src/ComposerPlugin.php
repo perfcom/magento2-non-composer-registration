@@ -105,22 +105,20 @@ final class ComposerPlugin implements PluginInterface, EventSubscriberInterface
 
 
         $registrationFilesString = var_export($registrationFiles, true);
-        $header = <<<PHP
+        $body = <<<PHP
 <?php
 declare(strict_types=1);
 
 \$registrationFiles = $registrationFilesString;
 
-PHP;
-        $body = <<<'PHP'
-
-foreach ($registrationFiles as $registrationFile) {
-    require_once __DIR__ . '/../../' . $registrationFile;
+foreach (\$registrationFiles as \$registrationFile) {
+    require_once \$dir . '/../../' . \$registrationFile;
 }
 
 PHP;
 
-        file_put_contents($filePath, $header . $body);
+        $body = str_replace('$dir', '_'.'_DIR_'.'_', $body);
+        file_put_contents($filePath, $body);
 
     }
 
